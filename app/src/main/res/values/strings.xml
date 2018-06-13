@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Recipes</string>
+
+    <string name="recipes_title">Recipes</string>
+    <string name="shopping_list_title">Shopping List</string>
+
+    <string name="add_new_recipe">Add New Recipe</string>
+    <string name="add_new_ingredient">Add New Ingredient</string>
+    <string name="edit_recipe">Edit Recipe</string>
+    <string name="edit_ingredient">Edit Ingredient</string>
+
+    <string name="new_recipe">New Recipe</string>
+    <string name="new_ingredient">New Ingredient</string>
+
+    <string name="recipe_name">Recipe Name</string>
+    <string name="ingredient_name">Ingredient Name</string>
+    <string name="ingredient_amount">Ingredient Amount</string>
+
+    <string name="recipe">recipe</string>
+    <string name="ingredient">ingredient</string>
+
+    <string name="name_label">Name: </string>
+    <string name="amount_label">Amount: </string>
+    <string name="servings_label">No of servings: </string>
+
+    <string name="ok">OK</string>
+    <string name="delete">DELETE</string>
+    <string name="clear">CLEAR</string>
+    <string name="cancel">CANCEL</string>
+    <string name="close">CLOSE</string>
+
+    <string name="create_shopping">Please create a shopping list.</string>
+    <string name="view_recipe_list">View List Of Recipes"</string>
+    <string name="new_shopping_list">New Shopping List</string>
+    <string name="update_list">Update This List</string>
+    <string name="recipes_to_make">Recipes To Make</string>
+    <string name="update_shopping_list">Update Shopping List</string>
+    <string name="enter_amount_hint">Enter amount here</string>
+    <string name="select_recipes">Select Recipes</string>
+
+    <string name="add_list_toast">Adding new shopping list...</string>
+    <string name="update_list_toast">Updating shopping list...</string>
+    <string name="clear_list_toast">Clearing shopping list...</string>
+
+    <string name="new_string">new</string>
+    <string name="update_string">update</string>
+
+    <string name="recipes_list">recipesList</string>
+    <string name="shopping_list">shoppingList</string>
+    <string name="shopping_recipe_list">shoppingRecipesList</string>
+    <string name="shopping_list_multiplier">shoppingListMultiplier</string>
+
+    <string name="shopping">shopping</string>
+    <string name="shopping_recipes">shoppingRecipes</string>
+    <string name="shopping_multiplier">shoppingMultiplier</string>
+
+    <string name="one">1</string>
+
+    <string name="updating">Updating %1$s...</string>
+    <string name="deleting">Deleting %1$s...</string>
+    <string name="deleting_ingredient">Deleting %1$s from %2$s...</string>
+    <string name="entering_recipe">Entering %1$s...</string>
+    <string name="entering_ingredient">Entering %1$s to %2$s...</string>
+    <string name="remove_ingredient">Would you like to remove %1$s from your shopping list?</string>
+
+    <string name="ingredient_with_name">Ingredient: %1$s</string>
+
+    <string name="shopping_info">"Current shopping list: %1$d recipes.\nTotal items required: %2$d.\nFeeding: %3$d people.</string>
+    
+</resources>
