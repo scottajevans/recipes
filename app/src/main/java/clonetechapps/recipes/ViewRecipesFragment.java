@@ -139,26 +139,42 @@ public class ViewRecipesFragment extends Fragment {
                 //Takes the new name, and gets the ingredients and id of the original recipe.
                 //The recipe is then created and passed to the PreferencesHandler to save.
                 String newRecipeName = editName.getText().toString();
-                ArrayList<Ingredient> newRecipeIngredients = recipe.getIngredients();
-                int newRecipeId = recipe.getId();
-                Recipe newRecipe = new Recipe(newRecipeName, newRecipeIngredients, newRecipeId);
-                handler.replaceRecipe(recipe.getName(), recipe.getId(), newRecipe, context);
+                if(!newRecipeName.equals("") && !newRecipeName.equals(" ")){
+                    ArrayList<Ingredient> newRecipeIngredients = recipe.getIngredients();
+                    int newRecipeId = recipe.getId();
+                    Recipe newRecipe = new Recipe(newRecipeName, newRecipeIngredients, newRecipeId);
+                    handler.replaceRecipe(recipe.getName(), recipe.getId(), newRecipe, context);
 
-                //View refreshed so to show the updated recipe name.
-                //Finally a toast is displayed to let hte user know the recipe is being updated.
-                refreshView();
-                Toast.makeText(context, context.getString(R.string.updating, newRecipeName), Toast.LENGTH_SHORT).show();
+                    //View refreshed so to show the updated recipe name.
+                    //Finally a toast is displayed to let hte user know the recipe is being updated.
+                    refreshView();
+                    Toast.makeText(context, context.getString(R.string.updating, newRecipeName), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, context.getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        //Deletes the recipe. Simply passes to the PreferencesHandler and refreshed the view
+        //Deletes the recipe if it is not in a shopping list. Simply passes to the PreferencesHandler and refreshed the view
         //to show that the recipe is gone to the user. Also sets a toast as confirmation to the user.
         dialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                handler.deleteRecipe(recipe.getName(), recipe.getId(), context);
-                refreshView();
-                Toast.makeText(context,context.getString(R.string.deleting, recipe.getName()), Toast.LENGTH_SHORT).show();
+                ArrayList<Recipe> shoppingRecipesList = handler.loadShoppingRecipeList(context);
+                Boolean used = false;
+                for(int p = 0; p < shoppingRecipesList.size(); p++) {
+                    if (shoppingRecipesList.get(p) == recipe) {
+                        used = true;
+                    }
+                }
+                if(!used){
+                    handler.deleteRecipe(recipe.getName(), recipe.getId(), context);
+                    refreshView();
+                    Toast.makeText(context, context.getString(R.string.deleting, recipe.getName()), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, context.getString(R.string.cannot_remove_from_list), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -185,8 +201,6 @@ public class ViewRecipesFragment extends Fragment {
 
     //View is refreshed. This is simply re-creating and setting the expandableListView adapter.
     private void refreshView(){
-        ExpandableListAdapter e = new ExpandableListAdapter(getActivity(), mRecipes);
-        ExpandableListView expandableListView = (ExpandableListView) getView().findViewById(R.id.list);
-        expandableListView.setAdapter(e);
+        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 }

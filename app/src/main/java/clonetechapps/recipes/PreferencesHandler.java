@@ -147,7 +147,6 @@ public class PreferencesHandler {
         String json = gson.toJson(mShoppingList);
         editor.putString(context.getString(R.string.shopping), json);
         editor.apply();
-
     }
 
     //This function saves the shoppingList, the shoppingRecipesList and the shoppingMultiplier.
@@ -175,5 +174,16 @@ public class PreferencesHandler {
         String json2 = gson2.toJson(multiplier);
         editor2.putString(context.getString(R.string.shopping_multiplier), json2);
         editor2.apply();
+    }
+
+    //This is only used in one instance so far but shows that breaking the above up may be worth
+    //doing. This is a void to save the shopping list only.
+    public void saveShoppingListIngredients(Context context, ArrayList<Ingredient> list){
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.shopping_list), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(context.getString(R.string.shopping), json);
+        editor.apply();
     }
 }

@@ -1,7 +1,5 @@
 package clonetechapps.recipes;
 
-import java.util.ArrayList;
-
 public class Ingredient {
 
     //Ingredient item contains only name and amount currently.
@@ -35,5 +33,11 @@ public class Ingredient {
     @Override
     public String toString() {
         return "Ingredient name: " + mName + ". Amount is: " + mAmount;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        String s = obj.toString();
+        return s.equals(this.toString());
     }
 }

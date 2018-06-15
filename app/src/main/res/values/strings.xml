@@ -6,6 +6,7 @@
 
     <string name="add_new_recipe">Add New Recipe</string>
     <string name="add_new_ingredient">Add New Ingredient</string>
+    <string name="add_new_item">Add New Item</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="edit_ingredient">Edit Ingredient</string>
 
@@ -15,6 +16,8 @@
     <string name="recipe_name">Recipe Name</string>
     <string name="ingredient_name">Ingredient Name</string>
     <string name="ingredient_amount">Ingredient Amount</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_amount">Item Amount</string>
 
     <string name="recipe">recipe</string>
     <string name="ingredient">ingredient</string>
@@ -30,9 +33,9 @@
     <string name="close">CLOSE</string>
 
     <string name="create_shopping">Please create a shopping list.</string>
-    <string name="view_recipe_list">View List Of Recipes"</string>
-    <string name="new_shopping_list">New Shopping List</string>
-    <string name="update_list">Update This List</string>
+    <string name="view_recipe_list">View Recipes"</string>
+    <string name="new_shopping_list">New List</string>
+    <string name="update_list">Update List</string>
     <string name="recipes_to_make">Recipes To Make</string>
     <string name="update_shopping_list">Update Shopping List</string>
     <string name="enter_amount_hint">Enter amount here</string>
@@ -65,6 +68,15 @@
 
     <string name="ingredient_with_name">Ingredient: %1$s</string>
 
-    <string name="shopping_info">"Current shopping list: %1$d recipes.\nTotal items required: %2$d.\nFeeding: %3$d people.</string>
+    <string name="shopping_info">"Recipes: %1$d Items to buy: %2$d\nFeeding: %3$d people</string>
+
+    <string name="no_recipes">There are currently no recipes, please add some first.</string>
+    <string name="cannot_remove_from_list">This is used in shopping list. Please remove before deleting.</string>
+    <string name="no_ingredients_recipes">Recipes have no ingredients. Please add ingredients before creating list.</string>
+
+    <string name="name_empty">The name field is empty, please enter a value and try again.</string>
+    <string name="amount_empty">The amount field is empty, please enter a value and try again.</string>
+    <string name="amount_no_digit">The amount field does not include any numerical values.</string>
+    <string name="no_recipes_selected">There are no recipes selected. Please click Add New Item below.</string>
     
 </resources>

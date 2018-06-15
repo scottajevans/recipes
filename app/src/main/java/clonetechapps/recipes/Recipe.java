@@ -42,4 +42,10 @@ public class Recipe {
     public String toString() {
         return "Recipe name: " + mName + ". ID is: " + mId + ". Ingredients are: " + mIngredients.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        String s = obj.toString();
+        return s.equals(this.toString());
+    }
 }

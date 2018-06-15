@@ -4,21 +4,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
@@ -34,7 +31,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private PreferencesHandler handler = new PreferencesHandler();
     private DialogSettings dialogSettings = new DialogSettings();
 
-    public ExpandableListAdapter(Context context, ArrayList<Recipe> recipes){
+    public ExpandableListAdapter(Context context, ArrayList<Recipe> recipes) {
         this.context = context;
         this.mRecipes = recipes;
     }
@@ -62,10 +59,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int i) {
         mRecipes = handler.loadDataRecipes(context);
-        if(i == 0){
+        if (i == 0) {
             return 0;
         } else {
-            return mRecipes.get(i-1).getIngredients().size()+1;
+            return mRecipes.get(i - 1).getIngredients().size() + 1;
         }
     }
 
@@ -74,7 +71,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public Recipe getGroup(int i) {
         mRecipes = handler.loadDataRecipes(context);
-        return mRecipes.get(i-1);
+        return mRecipes.get(i - 1);
     }
 
     //Returns the ingredient at the position. We return take the group/parent - 1 (because of
@@ -83,7 +80,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     //the "Add New Ingredient".
     @Override
     public Ingredient getChild(int i, int i1) {
-        return mRecipes.get(i-1).getIngredients().get(i1);
+        return mRecipes.get(i - 1).getIngredients().get(i1);
     }
 
     //Simple getters.
@@ -115,7 +112,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         //Either set the text view to have the text "Add New Recipe" or set it to the name of the
         //recipe.
         TextView recipeName = (TextView) view.findViewById(R.id.view_recipe_name);
-        if(i == 0){
+        if (i == 0) {
             recipeName.setText(R.string.add_new_recipe);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,7 +132,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         final int recipeIdentifier = i;
-        final int ingredientIdentifier = i1 -1;
+        final int ingredientIdentifier = i1 - 1;
         if (view == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -143,7 +140,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView ingName = (TextView) view.findViewById(R.id.sub_name);
         TextView ingAmount = (TextView) view.findViewById(R.id.sub_amount);
-        if(i == 0){
+        if (i == 0) {
             return view;
         } else {
             //If we are looking at the first ingredient, set the text to "Add New Ingredient" and
@@ -162,14 +159,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             //TextViews. We then attach an onClick that starts an edit ingredient dialog.
             else {
                 mRecipes = handler.loadDataRecipes(context);
-                final Recipe recipe = mRecipes.get(i-1);
+                final Recipe recipe = mRecipes.get(i - 1);
                 final ArrayList<Ingredient> ingredient = recipe.getIngredients();
-                ingName.setText(ingredient.get(i1-1).getName());
-                ingAmount.setText(ingredient.get(i1-1).getAmount());
+                ingName.setText(ingredient.get(i1 - 1).getName());
+                ingAmount.setText(ingredient.get(i1 - 1).getAmount());
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editIngredientDialog(recipeIdentifier-1, ingredientIdentifier);
+                        editIngredientDialog(recipeIdentifier - 1, ingredientIdentifier);
                     }
                 });
             }
@@ -185,14 +182,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     //Dialog when an ingredient item is clicked.
-    private void editIngredientDialog(final int recipeId, final int ingredientId){
+    private void editIngredientDialog(final int recipeId, final int ingredientId) {
         final int ingredientIdentifier = ingredientId;
         final int recipeIdentifier = recipeId;
         final Ingredient ingredient = mRecipes.get(recipeIdentifier).getIngredients().get(ingredientIdentifier);
-        AlertDialog dialog =  new AlertDialog.Builder(context).create();
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
 
         //Set title of dialog.
-        TextView title =  new TextView(context);
+        TextView title = new TextView(context);
         dialogSettings.setDialogTitle(title, context.getString(R.string.edit_ingredient));
         dialog.setCustomTitle(title);
 
@@ -217,6 +214,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         editName.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setGravity(Gravity.CENTER_HORIZONTAL);
         editName.setLayoutParams(paramsName);
+        editName.setSelectAllOnFocus(true);
+        editName.requestFocus();
         ll.addView(editName);
 
         //LinearLayout2 will contain the amount label and EditText displayed below the name layout.
@@ -254,7 +253,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         //Set the positive OK button, this will save the updated recipe into the preferences.
         //We take the information the user has entered then set those into an ingredient object.
         //This is then added into the recipe in place of the old ingredient using setter methods.
-        //The recipe is then replaced with the new updated recipe.
+        //The ingredient is then replaced with the new updated ingredient.
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -262,37 +261,80 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 String newIngredientName = editName.getText().toString();
                 String newIngredientAmount = editAmount.getText().toString();
 
-                Recipe updateRecipe = mRecipes.get(recipeId);
-                String toUpdate = updateRecipe.getName();
-                ArrayList<Ingredient> ingredients = updateRecipe.getIngredients();
-                Ingredient toEdit = ingredients.get(ingredientId);
-                toEdit.setName(newIngredientName);
-                toEdit.setAmount(newIngredientAmount);
+                //This is validation to ensure that no blank values have been entered when creating
+                //the new ingredient.
+                if (newIngredientName.equals("") || newIngredientName.equals(" ")) {
+                    Toast.makeText(context, context.getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                } else if (newIngredientAmount.equals("") || newIngredientAmount.equals(" ")) {
+                    Toast.makeText(context, context.getString(R.string.amount_empty), Toast.LENGTH_SHORT).show();
+                } else {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    Boolean containsDigits = false;
+                    for(int r = 0; r < newIngredientAmount.length(); r++){
+                        if(Character.isDigit(newIngredientAmount.charAt(r))){
+                            stringBuilder.append(newIngredientAmount.charAt(r));
+                            containsDigits = true;
+                        }
+                    }
+                    //If there are no digits we display an error toast.
+                    //If there are we continue to saving the ingredient.
+                    if(!containsDigits){
+                        Toast.makeText(context,context.getString(R.string.amount_no_digit), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Recipe updateRecipe = mRecipes.get(recipeId);
+                        String toUpdate = updateRecipe.getName();
+                        ArrayList<Ingredient> ingredients = updateRecipe.getIngredients();
+                        Ingredient toEdit = ingredients.get(ingredientId);
+                        toEdit.setName(newIngredientName);
+                        toEdit.setAmount(newIngredientAmount);
 
-                handler.replaceRecipe(toUpdate, recipeId, updateRecipe, context);
-                refreshEvents();
+                        handler.replaceRecipe(toUpdate, recipeId, updateRecipe, context);
+                        refreshEvents();
 
-                Toast.makeText(context, context.getString(R.string.updating, toUpdate), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.updating, toUpdate), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
-        //Deletes the recipe, handled in the PReferencesHandler.
+        //Deletes the ingredient, handled in the PreferencesHandler.
         dialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String newIngredientName = editName.getText().toString();
-                handler.deleteIngredient(mRecipes.get(recipeId).getName(), mRecipes.get(recipeId).getId(), ingredientId, context);
-                refreshEvents();
-                Toast.makeText(context,context.getString(R.string.deleting_ingredient, newIngredientName, mRecipes.get(recipeId).getName()), Toast.LENGTH_SHORT).show();
+                ArrayList<Recipe> shoppingRecipesList = handler.loadShoppingRecipeList(context);
+                ArrayList<Ingredient> shoppingList = handler.loadShoppingList(context);
+                Boolean recipeUsed = false;
+                Boolean ingUsed = false;
+                for (int p = 0; p < shoppingRecipesList.size(); p++) {
+                    if (shoppingRecipesList.get(p).getId() == mRecipes.get(recipeIdentifier).getId()) {
+                        recipeUsed = true;
+                    }
+                }
+                for (int p = 0; p < shoppingList.size(); p++) {
+                    if (shoppingList.get(p).getName().equals(ingredient.getName())) {
+                        ingUsed = true;
+                    }
+                }
+                if (recipeUsed && ingUsed) {
+                    Toast.makeText(context, context.getString(R.string.cannot_remove_from_list), Toast.LENGTH_SHORT).show();
+                } else {
+                    handler.deleteIngredient(mRecipes.get(recipeId).getName(), mRecipes.get(recipeId).getId(), ingredientId, context);
+                    refreshEvents();
+                    Toast.makeText(context, context.getString(R.string.deleting_ingredient, newIngredientName, mRecipes.get(recipeId).getName()), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
         //Does nothing, cancels the dialog.
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE,context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {}
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
         });
 
         new Dialog(context);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
 
         //Set properties for the OK button
@@ -312,13 +354,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     //ID will be auto assigned and ingredients will be an empty list if creating a new recipe.
     //Otherwise the new ingredient will take both values for name and amount and save them.
     //As most was the same, I decided to use 1 function for both and use some if statements.
-    private void newDialog(final String type, int i){
+    private void newDialog(final String type, int i) {
         final int identifier = i;
         AlertDialog dialog = new AlertDialog.Builder(context).create();
 
         //Set title of the dialog box depending on the type passed in.
         TextView title = new TextView(context);
-        if(type == context.getString(R.string.recipe)){
+        if (type == context.getString(R.string.recipe)) {
             dialogSettings.setDialogTitle(title, context.getString(R.string.new_recipe));
         } else {
             dialogSettings.setDialogTitle(title, context.getString(R.string.new_ingredient));
@@ -343,7 +385,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         //Edit text for user entry, in which the type on affects the hint for the EditText.
         final EditText entName = new EditText(context);
-        if(type == context.getString(R.string.recipe)){
+        if (type == context.getString(R.string.recipe)) {
             entName.setHint(context.getString(R.string.recipe_name));
         } else {
             entName.setHint(context.getString(R.string.ingredient_name));
@@ -359,7 +401,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         //OK button functionality. Therefore we stop here and set the view.
         //If it is for an ingredient, we require the amount also so we set a TextView and EditText
         //to enter this data.
-        if(type == context.getString(R.string.recipe)){
+        if (type == context.getString(R.string.recipe)) {
             dialog.setView(ll);
         } else {
             LinearLayout ll2 = new LinearLayout(context);
@@ -395,17 +437,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //First we check the type for recipe, the check that there is not a blank value
+                //before saving.
                 //If we are saving a new recipe, we simply take the new recipe name, then create a
                 //blank ingredient ArrayList, and a new ID (by adding 1 to the highest value).
                 //We then save this into SharedPreferences.
-                if(type == context.getString(R.string.recipe)){
+                if (type.equals(context.getString(R.string.recipe))) {
                     String newRecipeName = entName.getText().toString();
-                    ArrayList<Ingredient> newRecipeIngredients = new ArrayList<>();
-                    int newRecipeId = mRecipes.get(mRecipes.size()).getId() + 1;
-                    handler.saveDataRecipes(context, new Recipe(newRecipeName, newRecipeIngredients, newRecipeId));
-                    refreshEvents();
-
-                    Toast.makeText(context, context.getString(R.string.entering_recipe, newRecipeName), Toast.LENGTH_SHORT).show();
+                    if (newRecipeName.equals("") || newRecipeName.equals(" ")) {
+                        Toast.makeText(context, context.getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                    } else {
+                        ArrayList<Ingredient> newRecipeIngredients = new ArrayList<>();
+                        int newRecipeId;
+                        if (mRecipes.size() > 0) {
+                            newRecipeId = (mRecipes.get(mRecipes.size() - 1).getId()) + 1;
+                        } else {
+                            newRecipeId = 1;
+                        }
+                        handler.saveDataRecipes(context, new Recipe(newRecipeName, newRecipeIngredients, newRecipeId));
+                        refreshEvents();
+                        Toast.makeText(context, context.getString(R.string.entering_recipe, newRecipeName), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 //If we are saving a new ingredient for a recipe, we get the name and amount from
                 //the user entered information. The new ingredient is created by adding it to the
@@ -414,25 +466,48 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 else {
                     String newIngredientName = entName.getText().toString();
                     String newIngredientAmount = entAmount.getText().toString();
-                    Recipe updatedRecipe = mRecipes.get(identifier-1);
-                    ArrayList<Ingredient> ingredients = updatedRecipe.getIngredients();
-                    ingredients.add(new Ingredient(newIngredientName, newIngredientAmount));
-                    updatedRecipe.setIngredients(ingredients);
 
-                    handler.replaceRecipe(updatedRecipe.getName(),updatedRecipe.getId(), updatedRecipe, context);
-                    refreshEvents();
-                    Toast.makeText(context, context.getString(R.string.entering_ingredient, newIngredientName, updatedRecipe.getName()), Toast.LENGTH_SHORT).show();
+                    if (newIngredientName.equals("") || newIngredientName.equals(" ")) {
+                        Toast.makeText(context, context.getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                    } else if (newIngredientAmount.equals("") || newIngredientAmount.equals(" ")) {
+                        Toast.makeText(context, context.getString(R.string.amount_empty), Toast.LENGTH_SHORT).show();
+                    } else {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        Boolean containsDigits = false;
+                        for(int r = 0; r < newIngredientAmount.length(); r++){
+                            if(Character.isDigit(newIngredientAmount.charAt(r))){
+                                stringBuilder.append(newIngredientAmount.charAt(r));
+                                containsDigits = true;
+                            }
+                        }
+
+                        if(!containsDigits){
+                            Toast.makeText(context,context.getString(R.string.amount_no_digit), Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Recipe updatedRecipe = mRecipes.get(identifier - 1);
+                            ArrayList<Ingredient> ingredients = updatedRecipe.getIngredients();
+                            ingredients.add(new Ingredient(newIngredientName, newIngredientAmount));
+                            updatedRecipe.setIngredients(ingredients);
+
+                            handler.replaceRecipe(updatedRecipe.getName(), updatedRecipe.getId(), updatedRecipe, context);
+                            refreshEvents();
+                            Toast.makeText(context, context.getString(R.string.entering_ingredient, newIngredientName, updatedRecipe.getName()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
 
             }
         });
 
         //Does nothing, cancels the dialog.
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE,context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {}
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
         });
 
         new Dialog(context);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
 
         //Set properties for the buttons
@@ -444,7 +519,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     //This function refreshes the display in the view.
-    private void refreshEvents(){
+    private void refreshEvents() {
         this.notifyDataSetChanged();
     }
 }
